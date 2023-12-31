@@ -8,10 +8,14 @@ function renderBoard(mat, selector) {
         strHTML += '<tr>'
         for (var j = 0; j < mat[0].length; j++) {
 
-            const cell = mat[i][j]
+            // const cell = mat[i][j]
             const className = `cell cell-${i}-${j}`
+            // const idName = `${i}-${j}`
 
-            strHTML += `<td class="${className}">${cell}</td>`
+            strHTML += `<td class="${className}" onclick="onCellClicked(this,${i},${j})" 
+            oncontextmenu="onCellMarked(this,${i},${j},event)"></td>`
+            // strHTML += `<td id="${idName}" class="${className}" onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(this,${i},${j},event)"></td>`
+            // strHTML += `<td id="${idName}" class="${className}">${cell}</td>`
         }
         strHTML += '</tr>'
     }
@@ -53,8 +57,7 @@ function countNegs(board, rowIdx, colIdx) {
             if (i === rowIdx && j === colIdx) continue
             if (j < 0 || j >= board[0].length) continue
             var currCell = board[i][j]
-            if (currCell === EMPTY) {
-                //change
+            if (currCell.isMine) {
                 count++
             }
         }
