@@ -8,36 +8,37 @@
 </head>
 <body onload="init()">
     <div class="logo">
-        <img src='../assets/img/clouds/logo.png'>
+        <img src='assets/img/clouds/logo.png'>
     </div>
     <div class="controls-container">
+        <div class="levels">
+            <select id="levelsDropdown" onchange="handleLevelChange(this)">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="expert">Expert</option>
+            </select>
+        </div>
         <h3 class="lives"></h3>
         <h3 class="score">TIME PASSED: 0</h3>
         <h3 class="best-score">best score goes here</h3>
-        <button class="smiley-btn" onclick="init()"></button>
-        <button class="safe-btn" onclick="onSafe()">safe-click</button>
-        <button class="exterminate-btn" onclick="onExterminate()">Exterminate!</button>
-        <button class="dark-btn" onclick="onDarkMode()">Night</button>
-        <button class="mega-hint-btn" onclick="onMegaHint()">Mega-Hint</button>
+        <h3 class="bombs-count"></h3>
         <div class="hints">
-            <button class="hint-btn" onclick="onHint(this)">💡</button>
-            <button class="hint-btn" onclick="onHint(this)">💡</button>
-            <button class="hint-btn" onclick="onHint(this)">💡</button>
+            <button class="hint-btn ctrls" onclick="onHint(this)"><img src='../assets/img/clouds/buttons/hint.png'></button>
+            <button class="hint-btn ctrls" onclick="onHint(this)"><img src='../assets/img/clouds/buttons/hint.png'></button>
+            <button class="hint-btn ctrls" onclick="onHint(this)"><img src='../assets/img/clouds/buttons/hint.png'></button>
         </div>
+        <button class="safe-btn ctrls" onclick="onSafe()"><img src='../assets/img/clouds/buttons/safe.png'></button>
+        <button class="exterminate-btn ctrls" onclick="onExterminate()"><img src='../assets/img/clouds/buttons/exterminator.png'></button>
+        <button class="mega-hint-btn ctrls" onclick="onMegaHint()"><img src='../assets/img/clouds/buttons/mega-hint.png'></button>
+        <button class="dark-btn ctrls" onclick="onDarkMode(this)"><img src='../assets/img/clouds/buttons/night.png'></button>
     </div>
+    <button class="smiley-btn" onclick="init()"></button>
     <div class="main-container">
     </div>
-    <div class="levels">
-        <select id="levelsDropdown" onchange="handleLevelChange(this)">
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="expert">Expert</option>
-        </select>
-    </div>
-    <script src="js/util.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/cells.js"></script>
-    <script src="js/features.js"></script>
+    <script src="./js/util.js"></script>
+    <script src="./js/game.js"></script>
+    <script src="./js/cells.js"></script>
+    <script src="./js/features.js"></script>
 </body>
 <footer>
     <p>Shahar Gadon · Coding Academy · Minesweeper 2024 · © All Rights Reserved</p>

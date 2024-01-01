@@ -5,19 +5,6 @@ var capturedBoards = []
 var firstRange
 var secondRange
 
-// function setMinesNegsCount(board) {
-//     var negs = []
-//     for (var i = 0; i < board.length; i++) {
-//         if (i < 0 || i >= board.length) continue
-//         for (var j = 0; j < board[i].length; j++) {
-//             if (j < 0 || j >= board[0].length) continue
-//             var currCell = board[i][j]
-//             currCell.minesAroundCount = countNegs(board, i, j)
-//         }
-//         if (currCell.minesAroundCount === 0) negs.push({ i, j })
-//     }
-//     return negs
-// }
 
 function expandShown(board, i, j) {
     expandShownAround(board, i, j)
@@ -29,10 +16,13 @@ function expandShownAround(board, rowIdx, colIdx) {
         if (i < 0 || i >= board.length) continue
         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
             if (j < 0 || j >= board[0].length) continue
-            if (board[i][j].isShown) continue
-            if (board[i][j].isMarked) continue
-            if (gBoard[i][j].isMine) continue
-            if (gBoard[i][j].minesAroundCount === 0) gNoMinesAroundCount.push({ i, j })
+            const currCell = board[i][j]
+            if (currCell.isShown) continue
+            if (currCell.isMarked) continue
+            if (currCell.isMine) continue
+            if (currCell.minesAroundCount === 0) gNoMinesAroundCount.push({ i, j })
+            gGame.shownCount++
+            console.log('gGame.shownCount:',gGame.shownCount )
             revealCell(i, j)
         }
     }
@@ -44,9 +34,6 @@ function expandShownAround(board, rowIdx, colIdx) {
         gNoMinesAroundCount.splice(i, 1)
         expandShownAround(board, locationI, locationJ)
     }
-
-    // console.log('gNoMinesAroundCount:', gNoMinesAroundCount)
-
 }
 
 function updateLives() {
@@ -56,7 +43,7 @@ function updateLives() {
 
 function onHint(elHintBtn) {
     console.log('hi:')
-    elHintBtn.innerText = HINTUSED
+    elHintBtn.innerHTML = "<img src='../assets/img/clouds/buttons/hint-used.png'>"
     gGame.isHint = true
 }
 
@@ -70,27 +57,6 @@ function onSafe() {
     setTimeout(() => {
         elSafeCell.classList.remove("safe")
     }, 1500)
-}
-
-function revealNegs(board, rowIdx, colIdx) {
-    for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
-        if (i < 0 || i >= board.length) continue
-        for (var j = colIdx - 1; j <= colIdx + 1; j++) {
-            if (j < 0 || j >= board[0].length) continue
-            // if (gBoard[i][j].minesAroundCount > 0) continue
-            revealCell(i, j)
-        }
-    }
-    setTimeout(() => {
-        for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
-            if (i < 0 || i >= board.length) continue
-            for (var j = colIdx - 1; j <= colIdx + 1; j++) {
-                if (j < 0 || j >= board[0].length) continue
-                hideCell(i, j)
-            }
-        }
-        gGame.isHint = false
-    }, 1000)
 }
 
 function saveBestScore() {
@@ -123,6 +89,7 @@ function getRandomSafe(board) {
 
 function onExterminate() {
     var randomIdxs = []
+    // while (randomIdxs.length < 3 || randomIdxs.length < gMines.length) {
     while (randomIdxs.length < gMines.length && randomIdxs.length < 3) {
         var randomIdx = getRandomIntInclusive(0, gMines.length - 1)
         if (!randomIdxs.includes(randomIdx)) {
@@ -133,39 +100,49 @@ function onExterminate() {
     for (let i = 0; i < randomIdxs.length; i++) {
         const currLocation = gMines[i]
         const currMine = gBoard[currLocation[0]][currLocation[1]]
+        if(currMine.isShown) continue
         const location = { i: currLocation[0], j: currLocation[1] }
         const elMine = document.querySelector(getClassName(location))
 
-        currMine.isMine = false
-        currMine.isShown = false
-        currMine.isMarked = false
+
+        elMine.innerText = "💥"
+        elMine.classList.remove("cell")
+        elMine.classList.add("shown")
+
         gMines.splice(i, 1)
 
-        console.log('elMine:', elMine)
-        console.log('currMine:', currMine)
-        elMine.innerText = "💥"
+        // gLevel.MINES--
 
-        gLevel.MINES--
-
-        setMinesNegsCount(gBoard)
+        // setMinesNegsCount(gBoard)
+        // renderBoard(gBoard, ".main-container")
 
         setTimeout(() => {
-            elMine.innerText = EMPTY
+            currMine.isMine = false
+            currMine.coverBlown = true
+            currMine.isShown = true
+            currMine.isMarked = false
+            elMine.innerText = MINE
+            gGame.shownCount++
+            console.log('gGame.shownCount:', gGame.shownCount)
+            setMinesNegsCount(gBoard)
         }, 1500)
     }
-    console.log('gBoard:', gBoard)
-    console.log('gLevel:', gLevel)
+    // console.log('gBoard:', gBoard)
+    // console.log('gLevel:', gLevel)
 
 }
 
-function onDarkMode() {
+function onDarkMode(elDarkBtn) {
     const elBody = document.querySelector("body")
-    const elbtns = document.querySelectorAll("button")
-    // console.log('elBody:',elBody )
+    // const elbtns = document.querySelectorAll("button")
+
     elBody.classList.toggle("dark")
-    elbtns.forEach(btn => {
-        btn.classList.toggle("dark")
-    })
+    // elbtns.forEach(btn => {
+    //     btn.classList.toggle("dark")
+    // })
+
+    elDarkBtn.innerHTML = elBody.classList.contains("dark") ? "<img src='../assets/img/clouds/buttons/day.png'>" : "<img src='../assets/img/clouds/buttons/night.png'>"
+    handleSmiley()
 }
 
 function onMegaHint() {
@@ -178,15 +155,11 @@ function handleMegaHint(elCell, i, j) {
     elCell.classList.add("highlight")
 
     if (gGame.megaHintRange === 1) {
-        firstRange = { i, j ,elCell}
+        firstRange = { i, j, elCell }
         return
     }
     if (gGame.megaHintRange === 2) {
-        secondRange = { i, j ,elCell}
-        console.log('firstRange:', firstRange.i)
-        console.log('secondRange:', secondRange.i)
-        console.log('firstRange:', firstRange)
-        console.log('secondRange:', secondRange)
+        secondRange = { i, j, elCell }
     }
 
     if (gGame.megaHintRange < 2) return
@@ -194,7 +167,7 @@ function handleMegaHint(elCell, i, j) {
 
     for (var i = firstRange.i; i <= secondRange.i; i++) {
         for (var j = firstRange.j; j <= secondRange.j; j++) {
-            const elCurrCell = document.querySelector(getClassName({i,j}))
+            const elCurrCell = document.querySelector(getClassName({ i, j }))
             elCurrCell.classList.add("highlight")
             revealCell(i, j)
         }
@@ -202,7 +175,7 @@ function handleMegaHint(elCell, i, j) {
     setTimeout(() => {
         for (var i = firstRange.i; i <= secondRange.i; i++) {
             for (var j = firstRange.j; j <= secondRange.j; j++) {
-                const elCurrCell = document.querySelector(getClassName({i,j}))
+                const elCurrCell = document.querySelector(getClassName({ i, j }))
                 elCurrCell.classList.remove("highlight")
                 hideCell(i, j)
             }

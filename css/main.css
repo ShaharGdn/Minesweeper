@@ -1,7 +1,6 @@
 body {
     background-image: url('../assets/img/clouds/1.png');
     background-size: cover;
-    background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,6 +8,40 @@ body {
 
 .hide {
     display: none;
+}
+
+.shown {
+    cursor: no-drop;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    background-color: #d1d1d1;
+    border: none;
+    text-align: center;
+}
+
+.dark {
+    background-image: url('../assets/img/clouds/2.png');
+    background-size: cover;
+    color: rgb(25, 0, 255);
+}
+
+button {
+    background: none;
+    border-radius: 3px;
+    border: none;
+    width: max-content;
+}
+
+button.dark {
+    background: none;
+    border-radius: 3px;
+    width: max-content;
+}
+
+.smiley-btn img {
+    height: 90px;
+    margin-bottom: 10px;
 }
 
 .main-container {
@@ -21,14 +54,26 @@ body {
 }
 
 .controls-container {
+    padding: 5px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex-direction: row;
+    position: fixed;
     background: #152c44;
-    width: 250px;
-    margin: 0px auto;
+    width: 100%;
     color: white;
+}
+
+h3 {
+    font-family: Assistant, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 100;
+    margin: 15px auto;
+}
+
+.logo img {
+    margin-top: 80px;
+    margin-bottom: 20px;
+    width: 500px;
+    align-self: center;
 }
 
 .hints {
@@ -37,83 +82,98 @@ body {
     flex-direction: row;
 }
 
-.hints button{
+.hints button {
     background: none;
 }
 
-
 table {
-    margin: auto;
-    width: 250px;
-    height: 250px;
+    /* margin: auto; */
+    width: max-content;
+    height: max-content;
 }
 
 .cell {
-    text-align: center;
-    background-color: rgba(91, 87, 79, 0.716);
-    height: 30px;
+    cursor: pointer;
     width: 30px;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-button {
-    background: none;
-    background-color: rgba(220, 243, 245, 0.439);
-    border-radius: 3px;
-    border: none;
-    margin: 3px;
-    width: max-content;
-    font-size: large;
-}
-
-button.dark {
-    background: none;
-    background-color: rgb(0, 0, 0);
-    border-radius: 3px;
-    border: none;
-    margin: 3px;
-    width: max-content;
-    font-size: large;
-}
-
-.safe {
-    background-color: greenyellow;
-}
-
-.dark {
-    background-image: url('../assets/img/clouds/2.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    color: rgb(222, 217, 217);
-}
-
-.highlight {
-    background-color: #917c57;
-}
-
-footer {
-    margin-top: 100px;
+    height: 30px;
+    position: relative;
+    background-color: #d1d1d1;
+    border-width: 3px;
+    border-style: solid;
+    border-color: white #9e9e9e #9e9e9e white;
     text-align: center;
-}
-
-h3 {
-    margin: 10px auto;
-}
-
-.logo img{
-    margin-top: 40px;
-    margin-bottom: 20px;
-    width: 300px;
-    align-self: center;
 }
 
 .cell:hover {
-    background-color: rgba(74, 71, 64, 0.716);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+    background-color: #b1afaf;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    border-width: 3px;
+    border-style: solid;
+    border-color: white #9e9e9e #9e9e9e white;
+    text-align: center;
 }
 
-/* .shown {
-    background-color: rgba(43, 41, 37, 0.716);
-    cursor: not-allowed;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-} */
+.safe {
+    background-color: rgb(47, 255, 241);
+}
+
+.highlight {
+    background-color: #b1afaf;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    border-width: 3px;
+    border-style: solid;
+    border-color: white #9e9e9e #9e9e9e white;
+    text-align: center;
+}
+
+.highlight.dark {
+    background-color: #b1afaf;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    border-width: 3px;
+    border-style: solid;
+    border-color: white #9e9e9e #9e9e9e white;
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+    width: 100%;
+    bottom: 0;
+    background-color: #152c44;
+    color: white;
+    font-family: Assistant, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 100;
+    margin-top: 100px;
+}
+
+.levels {
+    margin: 10px auto;
+}
+
+.ctrls img {
+    height: 45px;
+}
+
+#one {
+    color: green;
+}
+
+#two {
+    color: rgb(255, 200, 1);
+}
+
+#three {
+    color: rgb(255, 98, 1);
+}
+
+#four {
+    color: rgb(255, 1, 1);
+}
