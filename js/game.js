@@ -5,12 +5,12 @@ const FLAG = "🚩"
 const EMPTY = ''
 const HINTUSED = '𝘅'
 
-const NORMALSUN = "<img src='../assets/img/clouds/buttons/normal-sun.png'>"
-const HAPPYSUN = "<img src='../assets/img/clouds/buttons/happy-sun.png'>"
-const SADSUN = "<img src='../assets/img/clouds/buttons/sad-sun.png'>"
-const NORMALMOON = "<img src='../assets/img/clouds/buttons/regular-moon.png'>"
-const HAPPYMOON = "<img src='../assets/img/clouds/buttons/happy-moon.png'>"
-const SADMOON = "<img src='../assets/img/clouds/buttons/sad-moon.png'>"
+const NORMALSUN = "<img src='assets/img/clouds/buttons/normal-sun.png'>"
+const HAPPYSUN = "<img src='assets/img/clouds/buttons/happy-sun.png'>"
+const SADSUN = "<img src='assets/img/clouds/buttons/sad-sun.png'>"
+const NORMALMOON = "<img src='assets/img/clouds/buttons/regular-moon.png'>"
+const HAPPYMOON = "<img src='assets/img/clouds/buttons/happy-moon.png'>"
+const SADMOON = "<img src='assets/img/clouds/buttons/sad-moon.png'>"
 
 var gBoard
 var gSecInterval

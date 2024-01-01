@@ -61,6 +61,7 @@ button.dark {
     background: #152c44;
     width: 100%;
     color: white;
+    height: 50px;
 }
 
 h3 {
@@ -87,9 +88,10 @@ h3 {
 }
 
 table {
-    /* margin: auto; */
+    margin-bottom: 150px;
     width: max-content;
     height: max-content;
+    /* position: absolute; */
 }
 
 .cell {
@@ -146,20 +148,20 @@ table {
 footer {
     text-align: center;
     width: 100%;
-    bottom: 0;
     background-color: #152c44;
     color: white;
     font-family: Assistant, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-weight: 100;
-    margin-top: 100px;
+    bottom: 0;
+    position: fixed;
 }
 
 .levels {
-    margin: 10px auto;
+    margin: 15px auto;
 }
 
 .ctrls img {
-    height: 45px;
+    height: 35px;
 }
 
 #one {
