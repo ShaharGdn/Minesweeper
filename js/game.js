@@ -27,7 +27,8 @@ const gGame = {
     lives: 0,
     safeClicks: 3,
     megaHintRange: 0,
-    isMegaHint: false
+    isMegaHint: false,
+    hintCount: 3
 }
 
 const gLevel = {
@@ -57,15 +58,14 @@ function resetBoard() {
     gGame.safeClicks = 3
     gGame.megaHintRange = 0
     gGame.isMegaHint = false
-
-    gMines = []
+    gGame.HintCount = 3
 
     updateLives()
     handleSmiley()
 
     elScore.innerText = "TIME PASSED: 0"
     elBestScore.innerText = localStorage.getItem("bestScore") ? `BEST SCORE: ${localStorage.getItem("bestScore")}` : "BEST SCORE: play first:)"
-    elBombsCount.innerText = `Bombs: ${gLevel.MINES}`
+    elBombsCount.innerText = `Bombs: ${gMines.length}`
     elHintBtns.forEach(btn => {
         btn.innerHTML = "<img src='assets/img/clouds/buttons/hint.png'>"
     })
@@ -84,19 +84,17 @@ function makeBoard(size) {
             }
         }
     }
-    // placeMines(board)
-
-    // board[0][0].isMine = true
-    // board[0][1].isMine = true
-
-    // setMinesNegsCount(board)
+    placeMines(board, gLevel.MINES)
+    setMinesNegsCount(board)
     return board
 }
 
-function placeMines(board, location) {
+function placeMines(board, mines) {
     gMines = []
 
-    for (var i = 0; i < gLevel.MINES; i++) {
+    if(gMines.length > gLevel.MINES) return
+
+    for (var i = 0; i < mines; i++) {
         var randomI
         var randomJ
 
@@ -106,7 +104,8 @@ function placeMines(board, location) {
 
             var isDuplicate = false
             for (var k = 0; k < gMines.length; k++) {
-                if (gMines[k][0] === randomI && gMines[k][1] === randomJ || board[randomI][randomJ] === board[location.i][location.j]) {
+                if (gMines[k][0] === randomI && gMines[k][1] === randomJ) {
+                // if (gMines[k][0] === randomI && gMines[k][1] === randomJ || board[randomI][randomJ] === board[location.i][location.j]) {
                     isDuplicate = true
                     break
                 }
@@ -118,12 +117,48 @@ function placeMines(board, location) {
         }
 
         gMines.push([randomI, randomJ])
+        // console.log('gMines:', gMines)
     }
     gMines.forEach(location => {
         board[location[0]][location[1]].isMine = true
     })
-    // console.log('randomNums:', randomNums)
 }
+
+// function placeMines(board) {
+//     gMines = []
+
+//     if(gMines.length > gLevel.MINES) return
+
+//     for (var i = 0; i < gLevel.MINES; i++) {
+//         var randomI
+//         var randomJ
+
+//         while (true) {
+//             randomI = getRandomIntInclusive(0, board.length - 1)
+//             randomJ = getRandomIntInclusive(0, board.length - 1)
+
+//             var isDuplicate = false
+//             for (var k = 0; k < gMines.length; k++) {
+//                 if (gMines[k][0] === randomI && gMines[k][1] === randomJ) {
+//                 // if (gMines[k][0] === randomI && gMines[k][1] === randomJ || board[randomI][randomJ] === board[location.i][location.j]) {
+//                     isDuplicate = true
+//                     break
+//                 }
+//             }
+
+//             if (!isDuplicate) {
+//                 break
+//             }
+//         }
+
+//         gMines.push([randomI, randomJ])
+//         console.log('gMines:', gMines)
+//     }
+//     gMines.forEach(location => {
+//         board[location[0]][location[1]].isMine = true
+//     })
+//     // console.log('randomNums:', randomNums)
+// }
 
 function handleSmiley() {
     const elSmiley = document.querySelector(".smiley-btn")
@@ -155,6 +190,7 @@ function checkGameOver() {
         saveBestScore()
         revealBombs()
         handleSmiley()
+        gMines = []
         return
     }
 
@@ -173,6 +209,7 @@ function checkGameOver() {
     clearInterval(gSecInterval)
     saveBestScore()
     handleSmiley()
+    gMines = []
     return
 }
 

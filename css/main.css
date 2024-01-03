@@ -1,5 +1,6 @@
 body {
-    background-image: url('../assets/img/clouds/1.png');
+    /* background-image: url('../assets/img/clouds/day-sky.png'); */
+    background-image: url('../assets/img/clouds/day-sky.png');
     background-size: cover;
     display: flex;
     flex-direction: column;
@@ -22,9 +23,10 @@ body {
 }
 
 .dark {
-    background-image: url('../assets/img/clouds/2.png');
+    background-image: url('../assets/img/clouds/night-sky.png');
     background-size: cover;
-    color: rgb(25, 0, 255);
+    background-color: #10042D;
+    /* color: rgb(25, 0, 255); */
 }
 
 button {
@@ -32,6 +34,9 @@ button {
     border-radius: 3px;
     border: none;
     width: max-content;
+    display: inline;
+    cursor: pointer;
+    margin: 5px;
 }
 
 button.dark {
@@ -59,15 +64,28 @@ button.dark {
     display: flex;
     flex-direction: row;
     position: fixed;
-    background: #152c44;
+    background: #00B2C8;
     width: 100%;
     color: white;
     height: 50px;
+    margin: 0px;
+}
+
+.controls-container.dark {
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    background: #10042D;
+    width: 100%;
+    color: white;
+    height: 50px;
+    margin: 0px;
 }
 
 h3 {
     font-family: Assistant, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-weight: 100;
+    font-weight: 600;
     margin: 15px auto;
 }
 
@@ -89,7 +107,7 @@ h3 {
 }
 
 table {
-    margin-bottom: 150px;
+    margin-bottom: 10px;
     width: max-content;
     height: max-content;
     /* position: absolute; */
@@ -149,7 +167,18 @@ table {
 footer {
     text-align: center;
     width: 100%;
-    background-color: #152c44;
+    background-color: #25B9CC;
+    color: white;
+    font-family: Assistant, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 100;
+    bottom: 0;
+    position: fixed;
+}
+
+.footer.dark {
+    text-align: center;
+    width: 100%;
+    background-color: #5B2EE0;
     color: white;
     font-family: Assistant, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-weight: 100;
@@ -158,7 +187,8 @@ footer {
 }
 
 .levels {
-    margin: 15px auto;
+    /* margin: 15px auto; */
+    margin-bottom: 100px;
 }
 
 .ctrls img {
@@ -179,4 +209,92 @@ footer {
 
 #four {
     color: rgb(255, 1, 1);
+}
+
+@media screen and (max-width: 768px) {
+
+    /* Styles for smaller screens */
+    .logo img {
+        width: 100%;
+        /* Adjust as needed */
+    }
+
+    /* Add more styles as needed for smaller screens */
+}
+
+
+.dropdown {
+    position: relative;
+    display: block;
+    flex-direction: column;
+    margin-left: 50px;
+}
+
+.dropbtn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 140px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    cursor: pointer;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.show {
+    display: block;
+}
+
+
+/* Styling the container */
+.levels {
+    margin: 15px auto;
+    text-align: center;
+}
+
+/* Styling the select dropdown */
+#levelsDropdown {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333; 
+    line-height: 1.6;
+}
+
+#levelsDropdown option {
+    background-color: #fff;
+    color: #333;
+}
+
+
+#levelsDropdown:hover {
+    border-color: #666;
+}
+
+#levelsDropdown:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.7);
 }

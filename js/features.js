@@ -25,75 +25,28 @@ function expandShown(board, rowIdx, colIdx) {
     }
 }
 
-    // function expandShown(board, rowIdx, colIdx) {
-    //     if (board[rowIdx][colIdx].isMine) return
-    //     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
-    //         if (i < 0 || i >= board.length) continue
-    //         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
-    //             if (j < 0 || j >= board[0].length) continue
-    //             const currCell = board[i][j]
-    //             if (currCell.isShown) continue
-    //             if (currCell.isMarked) continue
-    //             if (currCell.isMine) continue
-    //             if (currCell.minesAroundCount === 0) gNoMinesAroundCount.push({ i, j })
-    //             gGame.shownCount++
-    //             revealCell(i, j)
-    //         }
-    //     }
-
-    //     for (var i = 0; i < gNoMinesAroundCount.length; i++) {
-    //         var locationI = gNoMinesAroundCount[i].i
-    //         var locationJ = gNoMinesAroundCount[i].j
-
-    //         gNoMinesAroundCount.splice(i, 1)
-    //         expandShown(board, locationI, locationJ)
-    //     }
-    // }
-
-
-    // function expandShown(board, i, j) {
-    //     expandShownAround(board, i, j)
-    // }
-
-    // function expandShownAround(board, rowIdx, colIdx) {
-    //     // console.log('expending')
-
-    //     if (board[rowIdx][colIdx].isMine) return
-    //     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
-    //         if (i < 0 || i >= board.length) continue
-    //         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
-    //             if (j < 0 || j >= board[0].length) continue
-    //             const currCell = board[i][j]
-    //             if (currCell.isShown) continue
-    //             if (currCell.isMarked) continue
-    //             if (currCell.isMine) continue
-    //             if (currCell.minesAroundCount === 0) gNoMinesAroundCount.push({ i, j })
-    //             gGame.shownCount++
-    //             revealCell(i, j)
-    //         }
-    //     }
-
-    //     for (var i = 0; i < gNoMinesAroundCount.length; i++) {
-    //         var locationI = gNoMinesAroundCount[i].i
-    //         var locationJ = gNoMinesAroundCount[i].j
-
-    //         gNoMinesAroundCount.splice(i, 1)
-    //         expandShownAround(board, locationI, locationJ)
-    //     }
-    // }
-
     function updateLives() {
         var elLives = document.querySelector(".lives")
         elLives.innerText = `LIVES: ${gGame.lives}`
     }
 
     function onHint(elHintBtn) {
-        console.log('hi:')
-        elHintBtn.innerHTML = "<img src='assets/img/clouds/buttons/hint-used.png'>"
+        if (!gGame.isOn) return
+
+        if (!gGame.hintCount) {
+            gGame.isHint = false
+            return
+        }
+        
         gGame.isHint = true
+        gGame.hintCount--
+        console.log('HintCount:', gGame.hintCount)
+        if (gGame.hintCount === 0) elHintBtn.innerHTML = "<img src='assets/img/clouds/buttons/hint-used.png'>"
     }
 
     function onSafe() {
+        if (!gGame.isOn) return
+
         if (gGame.safeClicks === 0) return
 
         const location = getRandomSafe(gBoard)
@@ -118,6 +71,8 @@ function expandShown(board, rowIdx, colIdx) {
 
     function getRandomSafe(board) {
         // console.log("hello")
+        if (!gGame.isOn) return
+
         var randomI = getRandomIntInclusive(0, board.length - 1)
         var randomJ = getRandomIntInclusive(0, board.length - 1)
 
@@ -134,6 +89,8 @@ function expandShown(board, rowIdx, colIdx) {
     }
 
     function onExterminate() {
+        if (!gGame.isOn) return
+
         var randomIdxs = []
         // while (randomIdxs.length < 3 || randomIdxs.length < gMines.length) {
         while (randomIdxs.length < gMines.length && randomIdxs.length < 3) {
@@ -180,26 +137,35 @@ function expandShown(board, rowIdx, colIdx) {
 
     function onDarkMode(elDarkBtn) {
         const elBody = document.querySelector("body")
+        const elControlBar = document.querySelector(".controls-container")
+        const elFooter = document.querySelector(".footer")
+        const elDayLogo =document.querySelector(".day-logo")
+        const elNightLogo =document.querySelector(".night-logo")
+
         const NIGHTBTNIMG = "<img src='assets/img/clouds/buttons/night.png'>"
         const DAYBTNIMG = "<img src='assets/img/clouds/buttons/day.png'>"
-        // const elbtns = document.querySelectorAll("button")
 
         elBody.classList.toggle("dark")
-        // elbtns.forEach(btn => {
-        //     btn.classList.toggle("dark")
-        // })
+        elControlBar.classList.toggle("dark")
+        elFooter.classList.toggle("dark")
+        elDayLogo.classList.toggle("hide")
+        elNightLogo.classList.toggle("hide")
 
-        elDarkBtn.innerHTML = elBody.classList.contains("dark") ? DAYBTNIMG : NIGHTBTNIMG
         handleSmiley()
+        elDarkBtn.innerHTML = elBody.classList.contains("dark") ? DAYBTNIMG : NIGHTBTNIMG
     }
 
     function onMegaHint() {
+        if (!gGame.isOn) return
+
         if (gGame.megaHintRange >= 2) return gGame.isMegaHint = false
 
         gGame.isMegaHint = true
     }
 
     function handleMegaHint(elCell, i, j) {
+        if (!gGame.isOn) return
+
         elCell.classList.add("highlight")
 
         if (gGame.megaHintRange === 1) {

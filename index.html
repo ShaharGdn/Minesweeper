@@ -1,46 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body onload="init()">
     <div class="logo">
-        <img src='assets/img/clouds/logo.png'>
+        <img class="day-logo" src='assets/img/clouds/logo1.png'>
+        <img class="hide night-logo" src='assets/img/clouds/logo2.png'>
     </div>
+    <div class="controls"></div>
     <div class="controls-container">
-        <div class="levels">
-            <select id="levelsDropdown" onchange="handleLevelChange(this)">
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="expert">Expert</option>
-            </select>
+        <div class="dropdown">
+            <button onclick="toggleDropdown()" class="dropbtn">Menu</button>
+            <div id="myDropdown" class="dropdown-content">
+                <button class="hint-btn ctrls" title="Click a cell to reveal it's neighbors!"
+                    onclick="onHint(this)"><img src='assets/img/clouds/buttons/hint.png'></button>
+                <button class="safe-btn ctrls" title="Get a safe cell" onclick="onSafe()"><img
+                        src='assets/img/clouds/buttons/safe.png'></button>
+                <button class="exterminate-btn ctrls" title="Exterminate up to 3 Bombs!" onclick="onExterminate()"><img
+                        src='assets/img/clouds/buttons/exterminator.png'></button>
+                <button class="mega-hint-btn ctrls"
+                    title="Reveal cells range for 2 seconds. Click area on left top and right bottom"
+                    onclick="onMegaHint()"><img src='assets/img/clouds/buttons/mega-hint.png'></button>
+                <button class="dark-btn ctrls" title="Toggle night / day mode" onclick="onDarkMode(this)"><img
+                        src='assets/img/clouds/buttons/night.png'></button>
+            </div>
         </div>
         <h3 class="lives"></h3>
         <h3 class="score">TIME PASSED: 0</h3>
         <h3 class="best-score">best score goes here</h3>
         <h3 class="bombs-count">BOMBS:</h3>
-        <div class="hints">
-            <button class="hint-btn ctrls" onclick="onHint(this)"><img src='assets/img/clouds/buttons/hint.png'></button>
-            <button class="hint-btn ctrls" onclick="onHint(this)"><img src='assets/img/clouds/buttons/hint.png'></button>
-            <button class="hint-btn ctrls" onclick="onHint(this)"><img src='assets/img/clouds/buttons/hint.png'></button>
-        </div>
-        <button class="safe-btn ctrls" onclick="onSafe()"><img src='assets/img/clouds/buttons/safe.png'></button>
-        <button class="exterminate-btn ctrls" onclick="onExterminate()"><img src='assets/img/clouds/buttons/exterminator.png'></button>
-        <button class="mega-hint-btn ctrls" onclick="onMegaHint()"><img src='assets/img/clouds/buttons/mega-hint.png'></button>
-        <button class="dark-btn ctrls" onclick="onDarkMode(this)"><img src='assets/img/clouds/buttons/night.png'></button>
     </div>
     <button class="smiley-btn" onclick="init()"></button>
     <div class="main-container">
+    </div>
+    <div class="levels">
+        <select id="levelsDropdown" onchange="handleLevelChange(this)">
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="expert">Expert</option>
+        </select>
     </div>
     <script src="./js/util.js"></script>
     <script src="./js/game.js"></script>
     <script src="./js/cells.js"></script>
     <script src="./js/features.js"></script>
 </body>
-<footer>
+<footer class="footer">
     <p>Shahar Gadon · Coding Academy · Minesweeper 2024 · © All Rights Reserved</p>
 </footer>
+
 </html>

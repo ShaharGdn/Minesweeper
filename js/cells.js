@@ -9,11 +9,12 @@ function onCellClicked(elCell, i, j) {
         return handleMegaHint(elCell, i, j)
     }
 
-
     if (gBoard[i][j].isShown) return
-    if (gGame.shownCount === 0 && gGame.markedCount === 0) {
+    if (gGame.shownCount === 0 && gGame.markedCount === 0 && !gGame.isMegaHint && !gGame.isHint) {
         startTimer()
-        handleFirstClick(gBoard, { i, j })
+        if (gBoard[i][j].isMine) replaceMine(elCell, i, j)
+        // placeMines(board, location)
+        // setMinesNegsCount(gBoard)
     }
 
     if (gGame.isHint) return revealNegs(gBoard, i, j)
@@ -32,6 +33,8 @@ function onCellClicked(elCell, i, j) {
 
 function onCellMarked(elCell, i, j, event) {
     event.preventDefault()
+    if (!gGame.isOn) return
+
     if (gGame.shownCount === 0 && gGame.markedCount === 0) startTimer()
     if (gBoard[i][j].isShown) return
 
@@ -157,7 +160,7 @@ function revealBombs() {
     for (let i = 0; i < gMines.length; i++) {
         const locationI = gMines[i][0]
         const locationJ = gMines[i][1]
-        
+
         if (gBoard[locationI][locationJ].isShown) continue
 
         const elCell = document.querySelector(getClassName({ i: locationI, j: locationJ }))
@@ -180,7 +183,15 @@ function setMinesNegsCount(board) {
     }
 }
 
-function handleFirstClick(board, location) {
-    placeMines(board, location)
-    setMinesNegsCount(board)
+function replaceMine(elCell, rowIdx, colIdx) {
+    console.log('gMines:', gMines)
+    for (var i = 0; i < gMines.length; i++) {
+        if (gMines[i][0] !== rowIdx) continue
+        if (gMines[i][0] === rowIdx && gMines[i][1] === colIdx) {
+            gMines.splice(i, 0)
+            gBoard[rowIdx][colIdx].isMine = false
+            placeMines(gBoard, 1)
+            break
+        }
+    }
 }
