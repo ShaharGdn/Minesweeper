@@ -16,6 +16,7 @@ var gBoard
 var gSecInterval
 var gMines
 
+
 const gGame = {
     isOn: false,
     isWin: false,
@@ -57,15 +58,16 @@ function resetBoard() {
     gGame.megaHintRange = 0
     gGame.isMegaHint = false
 
-    updateLives()
+    gMines = []
 
+    updateLives()
     handleSmiley()
+
     elScore.innerText = "TIME PASSED: 0"
     elBestScore.innerText = localStorage.getItem("bestScore") ? `BEST SCORE: ${localStorage.getItem("bestScore")}` : "BEST SCORE: play first:)"
-    elBombsCount.innerText = `Bombs:${gLevel.MINES}`
-    console.log('elBombsCount:', elBombsCount)
+    elBombsCount.innerText = `Bombs: ${gLevel.MINES}`
     elHintBtns.forEach(btn => {
-        btn.innerHTML = "<img src='../assets/img/clouds/buttons/hint.png'>"
+        btn.innerHTML = "<img src='assets/img/clouds/buttons/hint.png'>"
     })
 }
 
@@ -82,16 +84,16 @@ function makeBoard(size) {
             }
         }
     }
-    placeMines(board)
+    // placeMines(board)
 
     // board[0][0].isMine = true
     // board[0][1].isMine = true
 
-    setMinesNegsCount(board)
+    // setMinesNegsCount(board)
     return board
 }
 
-function placeMines(board) {
+function placeMines(board, location) {
     gMines = []
 
     for (var i = 0; i < gLevel.MINES; i++) {
@@ -104,7 +106,7 @@ function placeMines(board) {
 
             var isDuplicate = false
             for (var k = 0; k < gMines.length; k++) {
-                if (gMines[k][0] === randomI && gMines[k][1] === randomJ) {
+                if (gMines[k][0] === randomI && gMines[k][1] === randomJ || board[randomI][randomJ] === board[location.i][location.j]) {
                     isDuplicate = true
                     break
                 }
@@ -144,9 +146,9 @@ function checkBomb(i, j) {
 }
 
 function checkGameOver() {
-    console.log('gGame.shownCount:', gGame.shownCount)
-    console.log("checking game over")
-    if (!gGame.lives) {
+    // console.log('gGame.lives:', gGame.lives)
+    // if (!gGame.lives) {
+    if (!gGame.lives || gLevel.MINES === 2 && gGame.lives < 2) {
         console.log("Game Over")
         gGame.isOn = false
         clearInterval(gSecInterval)
@@ -159,7 +161,7 @@ function checkGameOver() {
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
             const currCell = gBoard[i][j]
-            // console.log('gGame.shownCount:', gGame.shownCount)
+            if (gLevel.MINES === 2 && gGame.lives < 2) return
             if (gGame.shownCount === (gLevel.SIZE ** 2)) break
             if (currCell.isMine && !currCell.isMarked) return
             if (gGame.shownCount !== (gLevel.SIZE ** 2 - gMines.length)) return
@@ -176,18 +178,18 @@ function checkGameOver() {
 
 function handleLevelChange(elLevel) {
     console.log('elLevel:', elLevel.value)
-    if(elLevel.value === "beginner") {
+    if (elLevel.value === "beginner") {
         console.log('hello:')
         gLevel.SIZE = 4
-        gLevel.MINES = 2   
+        gLevel.MINES = 2
         init()
     }
-    if(elLevel.value === "intermediate") {
+    if (elLevel.value === "intermediate") {
         gLevel.SIZE = 8
         gLevel.MINES = 14
         init()
     }
-    if(elLevel.value === "expert"){
+    if (elLevel.value === "expert") {
         gLevel.SIZE = 12
         gLevel.MINES = 32
         init()

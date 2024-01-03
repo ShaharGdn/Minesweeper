@@ -3,8 +3,6 @@
 
 function onCellClicked(elCell, i, j) {
     if (!gGame.isOn) return
-    console.log('gGamge.shownCount:', gGame.shownCount)
-
 
     if (gGame.isMegaHint) {
         gGame.megaHintRange++
@@ -13,15 +11,19 @@ function onCellClicked(elCell, i, j) {
 
 
     if (gBoard[i][j].isShown) return
-    if (gGame.shownCount === 0 && gGame.markedCount === 0) startTimer()
+    if (gGame.shownCount === 0 && gGame.markedCount === 0) {
+        startTimer()
+        handleFirstClick(gBoard, { i, j })
+    }
+
     if (gGame.isHint) return revealNegs(gBoard, i, j)
 
-    if (!gBoard[i][j].isShown && gBoard[i][j].minesAroundCount === 0 && !gBoard[i][j].isMine) return expandShown(gBoard, i, j)
+    if (gBoard[i][j].minesAroundCount === 0 && !gBoard[i][j].isMine) return expandShown(gBoard, i, j)
 
 
     gGame.shownCount++
-    revealCell(i, j)
     checkBomb(i, j)
+    revealCell(i, j)
     checkGameOver()
     handleSmiley()
     // captureBoard(gBoard)
@@ -56,7 +58,7 @@ function onCellMarked(elCell, i, j, event) {
 
 function revealCell(i, j) {
 
-    var elCell = document.querySelector(getClassName({ i, j }))
+    const elCell = document.querySelector(getClassName({ i, j }))
 
     if (gGame.isHint || gGame.isMegaHint) {
         if (gBoard[i][j].isMine && gBoard[i][j].isShown) {
@@ -87,7 +89,7 @@ function hideCell(i, j) {
 
     if (gGame.isHint || gGame.isMegaHint) {
         // elCell.classList.toggle("shown")
-        elCell.classList.add("cell")
+        elCell.classList.toggle("cell")
         if (gBoard[i][j].isShown) return
         if (gBoard[i][j].isMine && gBoard[i][j].isShown || gBoard[i][j].isMarked || gBoard[i][j].isShown) {
             return
@@ -129,38 +131,39 @@ function revealNegs(board, rowIdx, colIdx) {
 function handleInnerCell(i, j, elCell) {
     if (gBoard[i][j].isMine) return elCell.innerText = MINE
     if (gBoard[i][j].minesAroundCount === 0) return elCell.innerText = EMPTY
-    if (gBoard[i][j].minesAroundCount === 1)  {
+    if (gBoard[i][j].minesAroundCount === 1) {
         elCell.id = ""
         elCell.id = "one"
         elCell.innerText = gBoard[i][j].minesAroundCount
     }
-    if (gBoard[i][j].minesAroundCount === 2)  {
+    if (gBoard[i][j].minesAroundCount === 2) {
         elCell.id = ""
         elCell.id = "two"
         elCell.innerText = gBoard[i][j].minesAroundCount
     }
-    if (gBoard[i][j].minesAroundCount === 3)   {
+    if (gBoard[i][j].minesAroundCount === 3) {
         elCell.id = ""
         elCell.id = "three"
         elCell.innerText = gBoard[i][j].minesAroundCount
     }
-    if (gBoard[i][j].minesAroundCount === 4)    {
+    if (gBoard[i][j].minesAroundCount === 4) {
         elCell.id = ""
         elCell.id = "four"
         elCell.innerText = gBoard[i][j].minesAroundCount
     }
-    // else elCell.innerText = gBoard[i][j].minesAroundCount
-    // if (gBoard[i][j].isMine) return elCell.innerText = MINE
-    // if (gBoard[i][j].minesAroundCount === 0) return elCell.innerText = EMPTY
-    // else elCell.innerText = gBoard[i][j].minesAroundCount
 }
 
 function revealBombs() {
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[0].length; j++) {
-            const currCell = gBoard[i][j]
-            if (currCell.isMine) revealCell(i,j)
-        }
+    for (let i = 0; i < gMines.length; i++) {
+        const locationI = gMines[i][0]
+        const locationJ = gMines[i][1]
+        
+        if (gBoard[locationI][locationJ].isShown) continue
+
+        const elCell = document.querySelector(getClassName({ i: locationI, j: locationJ }))
+        elCell.classList.toggle("cell")
+        elCell.classList.add("shown")
+        handleInnerCell(locationI, locationJ, elCell)
     }
 }
 
@@ -169,10 +172,15 @@ function setMinesNegsCount(board) {
         if (i < 0 || i >= board.length) continue
         for (var j = 0; j < board[i].length; j++) {
             if (j < 0 || j >= board[0].length) continue
-            const elCell = document.querySelector(getClassName({i,j}))
+            const elCell = document.querySelector(getClassName({ i, j }))
             const currCell = board[i][j]
             currCell.minesAroundCount = countNegs(board, i, j)
-            if(currCell.isShown && !currCell.coverBlown) handleInnerCell(i,j,elCell)
+            if (currCell.isShown && !currCell.coverBlown) handleInnerCell(i, j, elCell)
         }
     }
+}
+
+function handleFirstClick(board, location) {
+    placeMines(board, location)
+    setMinesNegsCount(board)
 }
