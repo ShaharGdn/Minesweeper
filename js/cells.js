@@ -4,6 +4,10 @@
 function onCellClicked(elCell, i, j) {
     if (!gGame.isOn) return
 
+    clickSound.play()
+
+    if (gGame.isPlaceMines) return handleUserPlaceMines(elCell,i,j)
+
     if (gGame.isMegaHint) {
         gGame.megaHintRange++
         return handleMegaHint(elCell, i, j)
@@ -50,7 +54,8 @@ function onCellMarked(elCell, i, j, event) {
     //update model
     gBoard[i][j].isMarked = true
     //update dom
-    elCell.innerText = FLAG
+    // elCell.innerText = FLAG
+    elCell.innerHTML = FLAG
     gGame.markedCount++
     checkGameOver()
     handleSmiley()
@@ -59,11 +64,12 @@ function onCellMarked(elCell, i, j, event) {
 
 function revealCell(i, j) {
     updateBombs()
-    // console.log('gGame.mineCount', gGame.mineCount)
 
     const elCell = document.querySelector(getClassName({ i, j }))
 
     if (gGame.isHint || gGame.isMegaHint) {
+        if (gBoard[i][j].isShown) return
+
         if (gBoard[i][j].isMine && gBoard[i][j].isShown) {
             return
         } else {
@@ -93,9 +99,9 @@ function hideCell(i, j) {
 
     if (gGame.isHint || gGame.isMegaHint) {
         // elCell.classList.toggle("shown")
-        elCell.classList.toggle("cell")
-        elCell.classList.remove("shown")
         if (gBoard[i][j].isShown) return
+        elCell.classList.add("cell")
+        elCell.classList.remove("shown")
         if (gBoard[i][j].isMine && gBoard[i][j].isShown || gBoard[i][j].isMarked || gBoard[i][j].isShown) {
             return
         } else {
@@ -134,7 +140,8 @@ function revealNegs(board, rowIdx, colIdx) {
 }
 
 function handleInnerCell(i, j, elCell) {
-    if (gBoard[i][j].isMine) return elCell.innerText = MINE
+    if (gBoard[i][j].isMine) return elCell.innerHTML = MINE
+    // if (gBoard[i][j].isMine) return elCell.innerText = MINE
     if (gBoard[i][j].minesAroundCount === 0) return elCell.innerText = EMPTY
     if (gBoard[i][j].minesAroundCount === 1) {
         elCell.id = ""

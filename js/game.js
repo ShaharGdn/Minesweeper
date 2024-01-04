@@ -1,9 +1,11 @@
 'use strict'
 
-const MINE = "💣"
-const FLAG = "🚩"
+const MINE = "<img src='assets/img/icons/bomb.png'>"
+const FLAG = "<img src='assets/img/icons/flag.png'>"
+const BOMBED = "<img src='assets/img/icons/bombed.png'>"
+// const MINE = "💣"
+// const FLAG = "🚩"
 const EMPTY = ''
-const HINTUSED = '𝘅'
 
 const NORMALSUN = "<img src='assets/img/buttons/normal-sun.png'>"
 const HAPPYSUN = "<img src='assets/img/buttons/happy-sun.png'>"
@@ -11,6 +13,11 @@ const SADSUN = "<img src='assets/img/buttons/sad-sun.png'>"
 const NORMALMOON = "<img src='assets/img/buttons/regular-moon.png'>"
 const HAPPYMOON = "<img src='assets/img/buttons/happy-moon.png'>"
 const SADMOON = "<img src='assets/img/buttons/sad-moon.png'>"
+
+const clickSound = new Audio('assets/sound/click.mp3')
+const loseSound = new Audio('assets/sound/fail.mp3')
+const winSound = new Audio('assets/sound/twinkle.mp3')
+const bombSound = new Audio('assets/sound/bomb-sound.mp3')
 
 var gBoard
 var gSecInterval
@@ -33,6 +40,7 @@ const gGame = {
     isMegaHint: false,
     hintCount: 3,
     mineCount: gLevel.MINES,
+    isPlaceMines: false
 }
 
 function init() {
@@ -41,6 +49,7 @@ function init() {
     resetBoard()
     clearInterval(gSecInterval)
     updateBombs()
+    // console.log('gMines:', gMines)
 }
 
 function resetBoard() {
@@ -60,6 +69,7 @@ function resetBoard() {
     gGame.isMegaHint = false
     gGame.hintCount = 3
     gGame.mineCount = gLevel.MINES
+    gGame.isPlaceMines = false
 
 
     updateLives()
@@ -179,6 +189,7 @@ function checkBomb(i, j) {
         gGame.lives--
         gGame.mineCount--
         updateLives()
+        bombSound.play()
     }
     updateLives()
 }
@@ -194,11 +205,13 @@ function checkGameOver() {
         revealBombs()
         handleSmiley()
         gMines = []
+        loseSound.play()
         return
     }
 
-    if (gGame.shownCount !== (gLevel.SIZE ** 2 - gGame.markedCount)) return
-    if (gGame.shownCount === (gLevel.SIZE ** 2)) return
+    if (gGame.markedCount > gLevel.MINES) return
+    if (gGame.shownCount !== (gLevel.SIZE ** 2 - gGame.markedCount) && gGame.shownCount !== (gLevel.SIZE ** 2)) return
+    // if (gGame.shownCount === (gLevel.SIZE ** 2)) return
 
     console.log("WON")
     gGame.isWin = true
@@ -207,10 +220,14 @@ function checkGameOver() {
     saveBestScore()
     handleSmiley()
     gMines = []
+    winSound.play()
     return
 }
 
 function handleLevelChange(elLevel) {
+
+    clickSound.play()
+
     if (elLevel.value === "beginner") {
         console.log('hello:')
         gLevel.SIZE = 4

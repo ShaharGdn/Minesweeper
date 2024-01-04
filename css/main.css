@@ -294,7 +294,6 @@ footer {
     color: #333;
 }
 
-
 #levelsDropdown:hover {
     border-color: #666;
 }
@@ -303,4 +302,8 @@ footer {
     outline: none;
     border-color: #3498db;
     box-shadow: 0 0 5px rgba(52, 152, 219, 0.7);
+}
+
+.main-container img {
+    height: 25px;
 }

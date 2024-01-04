@@ -108,25 +108,23 @@ function onExterminate() {
         const elMine = document.querySelector(getClassName(location))
 
 
-        elMine.innerText = "💥"
-        elMine.classList.remove("cell")
+        elMine.innerHTML = BOMBED
+        bombSound.play()
+        // elMine.innerText = "💥"
+        elMine.classList.toggle("cell")
         elMine.classList.add("shown")
 
         gMines.splice(i, 1)
 
-        // gLevel.MINES--
-
-        // setMinesNegsCount(gBoard)
-        // renderBoard(gBoard, ".main-container")
 
         setTimeout(() => {
             currMine.isMine = false
             currMine.coverBlown = true
             currMine.isShown = true
             currMine.isMarked = false
-            elMine.innerText = MINE
+            elMine.innerHTML = MINE
+            // elMine.innerText = MINE
             gGame.shownCount++
-            console.log('gGame.shownCount:', gGame.shownCount)
             setMinesNegsCount(gBoard)
         }, 1500)
     }
@@ -247,3 +245,33 @@ function handleMegaHint(elCell, i, j) {
 //     // console.log('gNoMinesAroundCount:', gNoMinesAroundCount)
 
 // }
+
+function onUserPlaceMines() {
+    gMines = []
+    updateBombs()
+    gGame.isPlaceMines = true
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            gBoard[i][j].isMine = false
+        }
+    }
+}
+
+function handleUserPlaceMines(elCell, i, j) {
+    
+    gBoard[i][j].isMine = true
+    elCell.innerHTML = MINE
+    gMines.push([i, j])
+    setMinesNegsCount(gBoard)
+    updateBombs()
+    
+    setTimeout(() => {
+        elCell.innerText = ''
+    }, 500);
+    
+    if (gMines.length >= gLevel.MINES) {
+        gGame.isPlaceMines = false
+        return
+    }
+}
+
