@@ -5,17 +5,20 @@ const FLAG = "🚩"
 const EMPTY = ''
 const HINTUSED = '𝘅'
 
-const NORMALSUN = "<img src='assets/img/clouds/buttons/normal-sun.png'>"
-const HAPPYSUN = "<img src='assets/img/clouds/buttons/happy-sun.png'>"
-const SADSUN = "<img src='assets/img/clouds/buttons/sad-sun.png'>"
-const NORMALMOON = "<img src='assets/img/clouds/buttons/regular-moon.png'>"
-const HAPPYMOON = "<img src='assets/img/clouds/buttons/happy-moon.png'>"
-const SADMOON = "<img src='assets/img/clouds/buttons/sad-moon.png'>"
+const NORMALSUN = "<img src='assets/img/buttons/normal-sun.png'>"
+const HAPPYSUN = "<img src='assets/img/buttons/happy-sun.png'>"
+const SADSUN = "<img src='assets/img/buttons/sad-sun.png'>"
+const NORMALMOON = "<img src='assets/img/buttons/regular-moon.png'>"
+const HAPPYMOON = "<img src='assets/img/buttons/happy-moon.png'>"
+const SADMOON = "<img src='assets/img/buttons/sad-moon.png'>"
 
 var gBoard
 var gSecInterval
 var gMines
 
+const gLevel = {
+    SIZE: 4, MINES: 2
+}
 
 const gGame = {
     isOn: false,
@@ -28,11 +31,8 @@ const gGame = {
     safeClicks: 3,
     megaHintRange: 0,
     isMegaHint: false,
-    hintCount: 3
-}
-
-const gLevel = {
-    SIZE: 4, MINES: 2
+    hintCount: 3,
+    mineCount: gLevel.MINES,
 }
 
 function init() {
@@ -40,13 +40,13 @@ function init() {
     renderBoard(gBoard, ".main-container")
     resetBoard()
     clearInterval(gSecInterval)
+    updateBombs()
 }
 
 function resetBoard() {
     const elScore = document.querySelector(".score")
     const elBestScore = document.querySelector(".best-score")
-    const elHintBtns = document.querySelectorAll(".hint-btn")
-    const elBombsCount = document.querySelectorAll(".bombs-count")
+    const elHintBtn = document.querySelector(".hint-btn")
 
     gGame.isOn = true
     gGame.isWin = false
@@ -58,17 +58,17 @@ function resetBoard() {
     gGame.safeClicks = 3
     gGame.megaHintRange = 0
     gGame.isMegaHint = false
-    gGame.HintCount = 3
+    gGame.hintCount = 3
+    gGame.mineCount = gLevel.MINES
+
 
     updateLives()
     handleSmiley()
+    updateBombs()
 
     elScore.innerText = "TIME PASSED: 0"
     elBestScore.innerText = localStorage.getItem("bestScore") ? `BEST SCORE: ${localStorage.getItem("bestScore")}` : "BEST SCORE: play first:)"
-    elBombsCount.innerText = `Bombs: ${gMines.length}`
-    elHintBtns.forEach(btn => {
-        btn.innerHTML = "<img src='assets/img/clouds/buttons/hint.png'>"
-    })
+    elHintBtn.innerHTML = "<img src='assets/img/buttons/hint.png'>"
 }
 
 function makeBoard(size) {
@@ -92,7 +92,7 @@ function makeBoard(size) {
 function placeMines(board, mines) {
     gMines = []
 
-    if(gMines.length > gLevel.MINES) return
+    if (gMines.length > gLevel.MINES) return
 
     for (var i = 0; i < mines; i++) {
         var randomI
@@ -105,7 +105,6 @@ function placeMines(board, mines) {
             var isDuplicate = false
             for (var k = 0; k < gMines.length; k++) {
                 if (gMines[k][0] === randomI && gMines[k][1] === randomJ) {
-                // if (gMines[k][0] === randomI && gMines[k][1] === randomJ || board[randomI][randomJ] === board[location.i][location.j]) {
                     isDuplicate = true
                     break
                 }
@@ -176,13 +175,17 @@ function startTimer() {
 }
 
 function checkBomb(i, j) {
-    if (gBoard[i][j].isMine) gGame.lives--
+    if (gBoard[i][j].isMine) {
+        gGame.lives--
+        gGame.mineCount--
+        updateLives()
+    }
     updateLives()
 }
 
 function checkGameOver() {
-    // console.log('gGame.lives:', gGame.lives)
-    // if (!gGame.lives) {
+    updateBombs()
+
     if (!gGame.lives || gLevel.MINES === 2 && gGame.lives < 2) {
         console.log("Game Over")
         gGame.isOn = false
@@ -194,15 +197,9 @@ function checkGameOver() {
         return
     }
 
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[0].length; j++) {
-            const currCell = gBoard[i][j]
-            if (gLevel.MINES === 2 && gGame.lives < 2) return
-            if (gGame.shownCount === (gLevel.SIZE ** 2)) break
-            if (currCell.isMine && !currCell.isMarked) return
-            if (gGame.shownCount !== (gLevel.SIZE ** 2 - gMines.length)) return
-        }
-    }
+    if (gGame.shownCount !== (gLevel.SIZE ** 2 - gGame.markedCount)) return
+    if (gGame.shownCount === (gLevel.SIZE ** 2)) return
+
     console.log("WON")
     gGame.isWin = true
     gGame.isOn = false
@@ -214,7 +211,6 @@ function checkGameOver() {
 }
 
 function handleLevelChange(elLevel) {
-    console.log('elLevel:', elLevel.value)
     if (elLevel.value === "beginner") {
         console.log('hello:')
         gLevel.SIZE = 4
@@ -233,3 +229,7 @@ function handleLevelChange(elLevel) {
     }
 }
 
+function updateBombs() {
+    const elBombsCount = document.querySelector(".bombs-count")
+    elBombsCount.innerText = `BOMBS: ${gGame.mineCount}`
+}

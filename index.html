@@ -10,25 +10,25 @@
 
 <body onload="init()">
     <div class="logo">
-        <img class="day-logo" src='assets/img/clouds/logo1.png'>
-        <img class="hide night-logo" src='assets/img/clouds/logo2.png'>
+        <img class="day-logo" src='assets/img/logos/logo1.png'>
+        <img class="hide night-logo" src='assets/img/logos/logo2.png'>
     </div>
     <div class="controls"></div>
     <div class="controls-container">
         <div class="dropdown">
             <button onclick="toggleDropdown()" class="dropbtn">Menu</button>
             <div id="myDropdown" class="dropdown-content">
+                <button class="dark-btn ctrls" title="Toggle night / day mode" onclick="onDarkMode(this)"><img
+                        src='assets/img/buttons/day.png'></button>
                 <button class="hint-btn ctrls" title="Click a cell to reveal it's neighbors!"
-                    onclick="onHint(this)"><img src='assets/img/clouds/buttons/hint.png'></button>
+                    onclick="onHint(this)"><img src='assets/img/buttons/hint.png'></button>
                 <button class="safe-btn ctrls" title="Get a safe cell" onclick="onSafe()"><img
-                        src='assets/img/clouds/buttons/safe.png'></button>
+                        src='assets/img/buttons/safe.png'></button>
                 <button class="exterminate-btn ctrls" title="Exterminate up to 3 Bombs!" onclick="onExterminate()"><img
-                        src='assets/img/clouds/buttons/exterminator.png'></button>
+                        src='assets/img/buttons/exterminator.png'></button>
                 <button class="mega-hint-btn ctrls"
                     title="Reveal cells range for 2 seconds. Click area on left top and right bottom"
-                    onclick="onMegaHint()"><img src='assets/img/clouds/buttons/mega-hint.png'></button>
-                <button class="dark-btn ctrls" title="Toggle night / day mode" onclick="onDarkMode(this)"><img
-                        src='assets/img/clouds/buttons/night.png'></button>
+                    onclick="onMegaHint()"><img src='assets/img/buttons/mega-hint.png'></button>
             </div>
         </div>
         <h3 class="lives"></h3>
